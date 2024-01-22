@@ -105,32 +105,32 @@ Now we will create another applet by which we can feed our pet at a specific tim
 
 Begin the code by including all the required libraries for this project. Arduino IDE has pre-installed libraries for servo motor and LCD module. But you have to download and install the rest of the libraries such as: Adafruit MQTT, NTP Client, Wire.h. 
 
-**#include <ESP8266WiFi.h>
-#include "Adafruit_MQTT.h"
-#include "Adafruit_MQTT_Client.h"
-#include<Servo.h>
-#include <NTPClient.h>
-#include <WiFiUdp.h>
-#include <LiquidCrystal_I2C.h>
-#include <Wire.h>**
+**<br>#include <ESP8266WiFi.h><br>
+<br>#include "Adafruit_MQTT.h"<br>
+<br>#include "Adafruit_MQTT_Client.h"<br>
+<br>#include<Servo.h><br>
+<br>#include <NTPClient.h><br>
+<br>#include <WiFiUdp.h><br>
+<br>#include <LiquidCrystal_I2C.h><br>
+<br>#include <Wire.h>**<br>
  
 
 To get accurate time from NTP server initialize the server location. Here I am using “pool.ntp.org” which is a pool of worldwide servers.
 
-**WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800,60000);**
+**<br>WiFiUDP ntpUDP;<br>
+<br>NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800,60000);<br>**
 
 Here in this part of code, we are defining the Adafruit server address, port number, Adafruit account username and unique AIO key that you copied from your Adafruit account. This is used to establish the MQTT connection between ESP and Adafruit IO.
 
-**#define MQTT_SERV "io.adafruit.com"
-#define MQTT_PORT 1883
-#define MQTT_NAME "Username"
-#define MQTT_PASS "AIO Key"**
+**<br>#define MQTT_SERV "io.adafruit.com"<br>
+<br>#define MQTT_PORT 1883<br>
+<br>#define MQTT_NAME "Username"<br>
+<br>#define MQTT_PASS "AIO Key"<br>**
 
 In this part of code, set up the MQTT and WiFi clients using previous information, i.e. adafruit username, AIO key, server address, and port no.
 
-**WiFiClient client;
-Adafruit_MQTT_Client mqtt(&client, MQTT_SERV, MQTT_PORT, MQTT_NAME, MQTT_PASS);**
+**<br>WiFiClient client;<br>
+<br>Adafruit_MQTT_Client mqtt(&client, MQTT_SERV, MQTT_PORT, MQTT_NAME, MQTT_PASS);<br>**
  
 
 Now here we set up the feed with a name “onoff” and subscribing to it.
@@ -145,20 +145,20 @@ timeClient.begin(); function is used to start the NTP client so the it can send 
 
 Inside the void loop, timeClient.update() function is used to update the date and time whenever we request to NTP servers. After getting the data, we store the hour, minute and second in three different integers. 
 
-**timeClient.update();
-hh = timeClient.getHours();
-mm = timeClient.getMinutes();
-ss = timeClient.getSeconds();**
+**<br>timeClient.update();<br>
+<br>hh = timeClient.getHours();<br>
+<brmm = timeClient.getMinutes();<br>
+<br>ss = timeClient.getSeconds();<br>**
  
 
 Here we are directly checking for a specific word in our subscribed feed and if the word matches with our specified word, i.e. ‘ON’ it will call the open_door() and close_door() function.
 The loop is shown below : 
-   _if (!strcmp((char*) onoff.lastread, "ON"))
-      {
-        open_door();
-        delay(1000);
-        close_door();
-       }_
+   _<br>if (!strcmp((char*) onoff.lastread, "ON"))
+      <br>{
+        <br>open_door();
+        <br>delay(1000);
+        <br>close_door();
+       <br>}_
 
 
 By using the if condition assign a specific time to the “Morning”, “Afternoon” and “Evening” strings. After that use another if condition to match the current time and feed time. So whenever we say “Feed My Pet Today Morning” it will call the open_door() and close_door() function when the current time is equal to 10:30. It will follow the same procedure for “Evening” and “Afternoon” strings.
